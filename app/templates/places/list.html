@@ -11,6 +11,7 @@
           <th class="text-left p-2">ID</th>
           <th class="text-left p-2">Name</th>
           <th class="text-left p-2">Put At</th>
+          <th class="text-left p-2">Objects</th>
           <th class="text-left p-2">Actions</th>
         </tr>
       </thead>
@@ -20,6 +21,14 @@
             <td class="p-2 font-mono">{{ it.id }}</td>
             <td class="p-2">{{ it.name }}</td>
             <td class="p-2">{{ it.put_at.isoformat() if it.put_at else '' }}</td>
+            <td class="p-2">
+              {% set names = objects_by_place.get(it.id, []) %}
+              {% if names %}
+                {{ ', '.join(names) }}
+              {% else %}
+                <span class="text-gray-500">None</span>
+              {% endif %}
+            </td>
             <td class="p-2"><a class="text-blue-700" href="/places/{{ it.id }}">Edit</a></td>
           </tr>
         {% endfor %}

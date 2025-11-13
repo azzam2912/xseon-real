@@ -1,4 +1,7 @@
+import logging
 import os
+from dotenv import load_dotenv
+load_dotenv()
 from datetime import datetime
 from typing import Optional
 
@@ -12,8 +15,14 @@ from itsdangerous import URLSafeTimedSerializer
 from .storage import get_storage, ObjectItem, PlaceItem, LogItem
 
 
-APP_SECRET = os.getenv("APP_SECRET", "dev-secret-change-me")
+APP_SECRET = os.getenv("APP_SECRET", "xseon-real-babi-guling-1234")
 PIN_HASH = os.getenv("PIN_HASH")  # hex sha256 of PIN, set via env
+IS_PROD = os.getenv("IS_PROD", "false")
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s %(name)s: %(message)s"
+)
 
 app = FastAPI()
 app.add_middleware(SessionMiddleware, secret_key=APP_SECRET)
@@ -36,12 +45,18 @@ def login_page(request: Request):
 @app.post("/login")
 def login_submit(request: Request, pin: str = Form(...)):
     import hashlib
-    if not PIN_HASH:
+    logging.info(f"IS_PROD: {IS_PROD}")
+    logging.info(f"PIN_HASH: {PIN_HASH}")
+    logging.info(f"pin: {pin}")
+    if not PIN_HASH and IS_PROD == "false":
+        logging.warning("No PIN_HASH set, allowing any pin in dev mode")
         # In dev mode without PIN configured, allow any pin (warn)
         request.session["auth"] = True
         return RedirectResponse("/", status_code=302)
     pin_hash = hashlib.sha256(pin.encode()).hexdigest()
+    logging.info(f"pin_hash: {pin_hash}")
     if pin_hash == PIN_HASH:
+        logging.info("PIN matched, auth granted")
         request.session["auth"] = True
         return RedirectResponse("/", status_code=302)
     return templates.TemplateResponse("login.html", {"request": request, "error": "Invalid PIN"})
@@ -150,7 +165,17 @@ def list_places(request: Request):
     require_auth(request)
     storage = get_storage()
     items = storage.list_places()
-    return templates.TemplateResponse("places/list.html", {"request": request, "items": items})
+    # Map place_id -> list of object names stored there
+    objects = storage.list_objects()
+    objects_by_place = {}
+    for o in objects:
+        if not o.place_id:
+            continue
+        objects_by_place.setdefault(o.place_id, []).append(o.name)
+    return templates.TemplateResponse(
+        "places/list.html",
+        {"request": request, "items": items, "objects_by_place": objects_by_place},
+    )
 
 
 @app.get("/places/new")
@@ -192,7 +217,11 @@ def edit_place(request: Request, place_id: str):
     require_auth(request)
     storage = get_storage()
     item = storage.get_place(place_id)
-    return templates.TemplateResponse("places/form.html", {"request": request, "item": item})
+    objects_here = [o for o in storage.list_objects() if o.place_id == place_id]
+    return templates.TemplateResponse(
+        "places/form.html",
+        {"request": request, "item": item, "objects_here": objects_here},
+    )
 
 
 @app.post("/places/{place_id}")
