@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="text-lg font-semibold">{{ 'Edit Tag' if item else 'New Tag' }}</h2>
+    <a href="/tags" class="text-blue-700">Back to list</a>
+  </div>
+  {% if error %}
+    <div class="mb-3 text-sm text-red-700">{{ error }}</div>
+  {% endif %}
+  {% if item %}
+    <div class="text-sm text-gray-700 mb-2">ID: <span class="font-mono">{{ item.id }}</span></div>
+  {% else %}
+    <div class="text-sm text-gray-600 mb-2">ID will be auto-generated (5-digit).</div>
+  {% endif %}
+  <form method="post" action="{{ '/tags/' + item.id if item else '/tags' }}" class="space-y-3">
+    <div>
+      <label class="block text-sm">Name</label>
+      <input name="name" value="{{ item.name if item else '' }}" class="border rounded px-3 py-2 w-full" required />
+    </div>
+    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Save</button>
+  </form>
+  {% if item %}
+    <form method="post" action="/tags/{{ item.id }}/delete" class="mt-3">
+      <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded">Delete Tag</button>
+    </form>
+  {% endif %}
+{% endblock %}

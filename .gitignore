@@ -25,7 +25,6 @@ htmlcov/
 
 # Environment files (secrets)
 .env
-.env.*
 
 # Local data storage (CSV fallback)
 app/data/*.csv

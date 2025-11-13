@@ -10,16 +10,55 @@
         <tr>
           <th class="text-left p-2">ID</th>
           <th class="text-left p-2">Name</th>
+          <th class="text-left p-2">Photos</th>
+          <th class="text-left p-2">Tags</th>
           <th class="text-left p-2">Put At</th>
           <th class="text-left p-2">Objects</th>
           <th class="text-left p-2">Actions</th>
         </tr>
       </thead>
+      <caption class="p-2 text-left">
+        <form method="get" action="/places" class="flex items-center gap-2">
+          <span class="text-sm">Filter by tag</span>
+          <select name="tag" class="border rounded px-2 py-1">
+            <option value="">(all)</option>
+            {% for t in tags %}
+              <option value="{{ t.id }}" {% if current_tag == t.id %}selected{% endif %}>{{ t.name }}</option>
+            {% endfor %}
+          </select>
+          <button type="submit" class="px-2 py-1 border rounded">Apply</button>
+          {% if current_tag %}
+            <a href="/places" class="text-blue-700 text-sm">Clear</a>
+          {% endif %}
+        </form>
+      </caption>
       <tbody>
         {% for it in items %}
           <tr class="border-t">
             <td class="p-2 font-mono">{{ it.id }}</td>
             <td class="p-2">{{ it.name }}</td>
+            <td class="p-2">
+              {% if it.images_photo %}
+                <div class="grid grid-cols-6 gap-1">
+                  {% for ph in it.images_photo[:6] %}
+                    <img src="{{ ph }}" class="h-10 w-full object-cover rounded border" />
+                  {% endfor %}
+                </div>
+              {% else %}
+                <span class="text-gray-500">None</span>
+              {% endif %}
+            </td>
+            <td class="p-2">
+              {% if it.tags %}
+                <div class="flex flex-wrap gap-1">
+                  {% for tid in it.tags %}
+                    <span class="px-2 py-0.5 rounded text-xs bg-blue-100 text-blue-900 border">{{ tags_by_id.get(tid, tid) }}</span>
+                  {% endfor %}
+                </div>
+              {% else %}
+                <span class="text-gray-500">None</span>
+              {% endif %}
+            </td>
             <td class="p-2">{{ it.put_at.isoformat() if it.put_at else '' }}</td>
             <td class="p-2">
               {% set names = objects_by_place.get(it.id, []) %}
@@ -29,7 +68,9 @@
                 <span class="text-gray-500">None</span>
               {% endif %}
             </td>
-            <td class="p-2"><a class="text-blue-700" href="/places/{{ it.id }}">Edit</a></td>
+            <td class="p-2">
+              <a class="text-blue-700" href="/places/{{ it.id }}">Edit</a>
+            </td>
           </tr>
         {% endfor %}
       </tbody>

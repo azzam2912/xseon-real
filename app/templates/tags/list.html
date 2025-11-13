@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="text-lg font-semibold">Tags</h2>
+    <a href="/tags/new" class="bg-blue-600 text-white px-3 py-2 rounded">Add Tag</a>
+  </div>
+  <div class="bg-white border rounded">
+    <table class="min-w-full text-sm">
+      <thead class="bg-gray-100">
+        <tr>
+          <th class="text-left p-2">ID</th>
+          <th class="text-left p-2">Name</th>
+          <th class="text-left p-2">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for it in items %}
+          <tr class="border-t">
+            <td class="p-2 font-mono">{{ it.id }}</td>
+            <td class="p-2">{{ it.name }}</td>
+            <td class="p-2">
+              <a class="text-blue-700" href="/tags/{{ it.id }}">Edit</a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}
