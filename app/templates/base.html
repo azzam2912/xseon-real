@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mini Warehouse Notes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+  </head>
+  <body class="bg-gray-50 text-gray-900">
+    <header class="border-b bg-white">
+      <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
+        <h1 class="font-semibold">Mini Warehouse Notes</h1>
+        <nav class="space-x-4 text-sm">
+          <a href="/" class="hover:underline">Home</a>
+          <a href="/objects" class="hover:underline">Objects</a>
+          <a href="/places" class="hover:underline">Places</a>
+          <a href="/logs" class="hover:underline">Logs</a>
+          <a href="/logout" class="text-red-600 hover:underline">Logout</a>
+        </nav>
+      </div>
+    </header>
+    <main class="max-w-4xl mx-auto px-4 py-6">
+      {% block content %}{% endblock %}
+    </main>
+  </body>
+</html>

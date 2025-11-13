@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <a href="/objects" class="block border rounded p-4 bg-white hover:bg-gray-50">
+      <div class="font-semibold">Objects</div>
+      <div class="text-sm text-gray-600">Track items like "Scissor-1"</div>
+    </a>
+    <a href="/places" class="block border rounded p-4 bg-white hover:bg-gray-50">
+      <div class="font-semibold">Places</div>
+      <div class="text-sm text-gray-600">Shelves, boxes, rooms</div>
+    </a>
+    <a href="/logs" class="block border rounded p-4 bg-white hover:bg-gray-50">
+      <div class="font-semibold">Logs</div>
+      <div class="text-sm text-gray-600">Record where you put things</div>
+    </a>
+  </div>
+{% endblock %}

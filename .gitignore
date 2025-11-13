@@ -1,0 +1,31 @@
+# Python bytecode and cache
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+
+# Build and distribution
+build/
+dist/
+*.egg-info/
+
+# Testing and coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# OS / editor files
+.DS_Store
+.idea/
+.vscode/
+
+# Environment files (secrets)
+.env
+.env.*
+
+# Local data storage (CSV fallback)
+app/data/*.csv

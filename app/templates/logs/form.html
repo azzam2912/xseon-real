@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+  <h2 class="text-lg font-semibold mb-4">New Log Entry</h2>
+  <form method="post" action="/logs" class="space-y-3">
+    <div>
+      <label class="block text-sm">Object</label>
+      <select name="object_id" class="border rounded px-3 py-2 w-full" required>
+        {% for o in objects %}
+          <option value="{{ o.id }}">{{ o.name }} ({{ o.id }})</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div>
+      <label class="block text-sm">Place</label>
+      <select name="place_id" class="border rounded px-3 py-2 w-full" required>
+        {% for p in places %}
+          <option value="{{ p.id }}">{{ p.name }} ({{ p.id }})</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div>
+      <label class="block text-sm">Timestamp (ISO, default now)</label>
+      <input name="at" class="border rounded px-3 py-2 w-full" />
+    </div>
+    <div>
+      <label class="block text-sm">Notes</label>
+      <textarea name="notes" class="border rounded px-3 py-2 w-full" rows="3"></textarea>
+    </div>
+    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Save Log</button>
+  </form>
+{% endblock %}
